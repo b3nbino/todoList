@@ -97,17 +97,70 @@ class TodoList {
     let list = this.todos.map((todo) => todo.toString()).join("\n");
     return `${title}\n${list}`;
   }
+
+  forEach(func) {
+    this.todos.forEach(func);
+  }
+
+  filter(func) {
+    let newList = new TodoList(this.title);
+
+    this.forEach((todo) => {
+      if (func(todo)) {
+        newList.add(todo);
+      }
+    });
+
+    return newList;
+  }
+
+  findByTitle(title) {
+    let wantedTodo;
+
+    this.forEach((todo) => {
+      if (todo.getTitle() === title) {
+        wantedTodo = todo;
+      }
+    });
+
+    return wantedTodo;
+  }
+
+  allDone() {
+    return this.filter((todo) => todo.isDone());
+  }
+
+  allNotDone() {
+    return this.filter((todo) => !todo.isDone());
+  }
+
+  markDone(title) {
+    let curr = this.findByTitle(title);
+    if (curr) {
+      curr.markDone();
+    }
+  }
+
+  markAllDone() {
+    this.forEach((todo) => todo.markDone());
+  }
+
+  markAllUndone() {
+    this.forEach((todo) => todo.markUndone());
+  }
+
+  toArray() {
+    return Array.from(this.todos);
+  }
 }
 
-// Omitted code
-let list = new TodoList("Today's Todos");
-let emptyList = new TodoList("Empty List");
 let todo1 = new Todo("Buy milk");
 let todo2 = new Todo("Clean room");
 let todo3 = new Todo("Go to the gym");
 let todo4 = new Todo("Go shopping");
 let todo5 = new Todo("Feed the cats");
 let todo6 = new Todo("Study for Launch School");
+let list = new TodoList("Today's Todos");
 
 list.add(todo1);
 list.add(todo2);
@@ -115,5 +168,5 @@ list.add(todo3);
 list.add(todo4);
 list.add(todo5);
 list.add(todo6);
-
-console.log(`${list}`);
+todo1.markDone();
+todo5.markDone();
